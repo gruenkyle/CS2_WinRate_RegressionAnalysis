@@ -30,7 +30,7 @@ URLS = ['https://bo3.gg/players?period=last_12_months&tiers=a&tab=main&sort=rati
         'https://bo3.gg/players?period=last_12_months&tiers=a&tab=multikills&sort=multikills_vs_5&order=desc',
         'https://bo3.gg/players?period=last_12_months&tiers=a&tab=multikills&sort=multikills_vs_5&order=desc&page=2',
         'https://bo3.gg/players?period=last_12_months&tiers=a&tab=clutches&sort=clutches_vs_5&order=desc',
-        'https://bo3.gg/players?period=last_12_months&tiers=a&tab=clutches&sort=clutches_vs_5&order=desc']
+        'https://bo3.gg/players?period=last_12_months&tiers=a&tab=clutches&sort=clutches_vs_5&order=desc&page=2']
 
 links = pd.DataFrame({'URL': URLS})
 
@@ -123,14 +123,11 @@ for j, URL in links['URL'].items():
 
 
         wait.until(EC.url_to_be(URL))
-        wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
-
-        sleepTime = 17.0
-        time.sleep(sleepTime + (2.0 * float(j)))
 
         if j == 0: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
 
-                soup = BeautifulSoup(page_source, features='html.parser')
+                soup = BeautifulSoup(page_source, features='lxml')
 
                 names = soup.find_all('span', class_="nickname")
                 
@@ -150,8 +147,9 @@ for j, URL in links['URL'].items():
                         mainFrame.loc[i, 'Damage'] = player.find("span").text.strip()
         
         if j == 1: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
 
-                soup = BeautifulSoup(page_source, features='html.parser')
+                soup = BeautifulSoup(page_source, features='lxml')
 
                 names = soup.find_all('span', class_="nickname")
                 
@@ -174,8 +172,9 @@ for j, URL in links['URL'].items():
                 print(mainFrame)
 
         if j == 2:
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
 
-                soup = BeautifulSoup(page_source, features='html.parser')
+                soup = BeautifulSoup(page_source, features='lxml')
 
                 names = soup.find_all('span', class_="nickname")
 
@@ -199,8 +198,9 @@ for j, URL in links['URL'].items():
                         perFrame.loc[i, 'Assist'] = player.find("span").text.strip()     
 
         if j == 3:
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
 
-                soup = BeautifulSoup(page_source, features='html.parser')
+                soup = BeautifulSoup(page_source, features='lxml')
 
                 names = soup.find_all('span', class_="nickname")
 
@@ -227,7 +227,8 @@ for j, URL in links['URL'].items():
                 print(perFrame)
 
         if j == 4:
-                soup = BeautifulSoup(page_source, features='html.parser')
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                soup = BeautifulSoup(page_source, features='lxml')
 
                 names = soup.find_all('span', class_="nickname")
 
@@ -251,7 +252,8 @@ for j, URL in links['URL'].items():
                         aimFrame.loc[i, 'ShotPer'] = player.find("p").text.strip()  
 
         if j == 5:
-                soup = BeautifulSoup(page_source, features='html.parser')
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                soup = BeautifulSoup(page_source, features='lxml')
 
                 names = soup.find_all('span', class_="nickname")
 
@@ -277,5 +279,388 @@ for j, URL in links['URL'].items():
                 
                 aimFrame = aimFrame._append(aimFrame2, ignore_index=True)
                 print(aimFrame)
+
+        if j == 6: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                
+                soup = BeautifulSoup(page_source, features='lxml')
+
+                names = soup.find_all('span', class_="nickname")
+
+                for name in names:
+                        gerFrame = gerFrame._append({'Name': name.text.strip()}, ignore_index=True)
+
+                nextDiv = soup.find_all('div', class_='table-cell flash_assist current-sorting')
+                for i, player in enumerate(nextDiv[1:]):
+                        gerFrame.loc[i, 'FlashAssist'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell flash_blinded')
+                for i, player in enumerate(nextDiv[1:]):
+                        gerFrame.loc[i, 'FlashBlind'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell flash_duration')
+                for i, player in enumerate(nextDiv[1:]):
+                        gerFrame.loc[i, 'FlashDuration'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell molotov_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        gerFrame.loc[i, 'MolDMG'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell he_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        gerFrame.loc[i, 'HeDMG'] = player.find("span").text.strip() 
+
+        if j == 7: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                
+                soup = BeautifulSoup(page_source, features='lxml')
+
+                names = soup.find_all('span', class_="nickname")
+
+                for name in names:
+                        gerFrame2 = gerFrame2._append({'Name': name.text.strip()}, ignore_index=True)
+
+                nextDiv = soup.find_all('div', class_='table-cell flash_assist current-sorting')
+                for i, player in enumerate(nextDiv[1:]):
+                        gerFrame2.loc[i, 'FlashAssist'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell flash_blinded')
+                for i, player in enumerate(nextDiv[1:]):
+                        gerFrame2.loc[i, 'FlashBlind'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell flash_duration')
+                for i, player in enumerate(nextDiv[1:]):
+                        gerFrame2.loc[i, 'FlashDuration'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell molotov_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        gerFrame2.loc[i, 'MolDMG'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell he_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        gerFrame2.loc[i, 'HeDMG'] = player.find("span").text.strip() 
+
+                gerFrame = gerFrame._append(gerFrame2, ignore_index=True)
+                print(gerFrame)
+
+        if j == 8: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                
+                soup = BeautifulSoup(page_source, features='lxml')
+
+                names = soup.find_all('span', class_="nickname")
+
+                for name in names:
+                        gunFrame = gunFrame._append({'Name': name.text.strip()}, ignore_index=True)
+                        
+                nextDiv = soup.find_all('div', class_='table-cell ak47_kills current-sorting')
+                for i, player in enumerate(nextDiv[1:]):
+                        gunFrame.loc[i, 'AK47-Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell ak47_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        gunFrame.loc[i, 'AK47-DMG'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell awp_kills')
+                for i, player in enumerate(nextDiv[1:]):
+                        gunFrame.loc[i, 'AWP-Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell awp_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        gunFrame.loc[i, 'AWP-DMG'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell m4a1_kills')
+                for i, player in enumerate(nextDiv[1:]):
+                        gunFrame.loc[i, 'M4A1-Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell m4a1_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        gunFrame.loc[i, 'M4A1-DMG'] = player.find("span").text.strip() 
+    
+        if j == 9: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                
+                soup = BeautifulSoup(page_source, features='lxml')
+
+                names = soup.find_all('span', class_="nickname")
+
+                for name in names:
+                        gunFrame2 = gunFrame2._append({'Name': name.text.strip()}, ignore_index=True)
+                        
+                nextDiv = soup.find_all('div', class_='table-cell ak47_kills current-sorting')
+                for i, player in enumerate(nextDiv[1:]):
+                        gunFrame2.loc[i, 'AK47-Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell ak47_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        gunFrame2.loc[i, 'AK47-DMG'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell awp_kills')
+                for i, player in enumerate(nextDiv[1:]):
+                        gunFrame2.loc[i, 'AWP-Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell awp_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        gunFrame2.loc[i, 'AWP-DMG'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell m4a1_kills')
+                for i, player in enumerate(nextDiv[1:]):
+                        gunFrame2.loc[i, 'M4A1-Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell m4a1_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        gunFrame2.loc[i, 'M4A1-DMG'] = player.find("span").text.strip() 
+                        
+                gunFrame = gunFrame._append(gunFrame2, ignore_index=True)
+                print(gunFrame)
+
+
+        if j == 10: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                
+                soup = BeautifulSoup(page_source, features='lxml')
+
+                names = soup.find_all('span', class_="nickname")
+
+                for name in names:
+                        pisFrame = pisFrame._append({'Name': name.text.strip()}, ignore_index=True)
+                        
+                nextDiv = soup.find_all('div', class_='table-cell deagle_kills current-sorting')
+                for i, player in enumerate(nextDiv[1:]):
+                        pisFrame.loc[i, 'Deagle-Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell deagle_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        pisFrame.loc[i, 'Deagle-DMG'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell glock_kills')
+                for i, player in enumerate(nextDiv[1:]):
+                        pisFrame.loc[i, 'Glock-Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell glock_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        pisFrame.loc[i, 'Glock-DMG'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell usp_kills')
+                for i, player in enumerate(nextDiv[1:]):
+                        pisFrame.loc[i, 'USP-Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell usp_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        pisFrame.loc[i, 'USP-DMG'] = player.find("span").text.strip()
+                        
+        if j == 11: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                
+                soup = BeautifulSoup(page_source, features='lxml')
+
+                names = soup.find_all('span', class_="nickname")
+
+                for name in names:
+                        pisFrame2 = pisFrame2._append({'Name': name.text.strip()}, ignore_index=True)
+                        
+                nextDiv = soup.find_all('div', class_='table-cell deagle_kills current-sorting')
+                for i, player in enumerate(nextDiv[1:]):
+                        pisFrame2.loc[i, 'Deagle-Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell deagle_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        pisFrame2.loc[i, 'Deagle-DMG'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell glock_kills')
+                for i, player in enumerate(nextDiv[1:]):
+                        pisFrame2.loc[i, 'Glock-Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell glock_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        pisFrame2.loc[i, 'Glock-DMG'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell usp_kills')
+                for i, player in enumerate(nextDiv[1:]):
+                        pisFrame2.loc[i, 'USP-Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell usp_damage')
+                for i, player in enumerate(nextDiv[1:]):
+                        pisFrame2.loc[i, 'USP-DMG'] = player.find("span").text.strip()
+                        
+                pisFrame = pisFrame._append(pisFrame2, ignore_index=True)
+                print(pisFrame)
+    
+    
+        if j == 12: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                
+                soup = BeautifulSoup(page_source, features='lxml')
+
+                names = soup.find_all('span', class_="nickname")
+
+                for name in names:
+                        ecoFrame = ecoFrame._append({'Name': name.text.strip()}, ignore_index=True)
+                        
+                nextDiv = soup.find_all('div', class_='table-cell kill_cost current-sorting')
+                for i, player in enumerate(nextDiv[1:]):
+                        ecoFrame.loc[i, 'Kill-Cost'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell dmg_cost')
+                for i, player in enumerate(nextDiv[1:]):
+                        ecoFrame.loc[i, 'DMG-Cost'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell saved')
+                for i, player in enumerate(nextDiv[1:]):
+                        ecoFrame.loc[i, 'Saved-Avg'] = player.find("span").text.strip()
+
+        if j == 13: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                
+                soup = BeautifulSoup(page_source, features='lxml')
+
+                names = soup.find_all('span', class_="nickname")
+
+                for name in names:
+                        ecoFrame2 = ecoFrame2._append({'Name': name.text.strip()}, ignore_index=True)
+                        
+                nextDiv = soup.find_all('div', class_='table-cell kill_cost current-sorting')
+                for i, player in enumerate(nextDiv[1:]):
+                        ecoFrame2.loc[i, 'Kill-Cost'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell dmg_cost')
+                for i, player in enumerate(nextDiv[1:]):
+                        ecoFrame2.loc[i, 'DMG-Cost'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell saved')
+                for i, player in enumerate(nextDiv[1:]):
+                        ecoFrame2.loc[i, 'Saved-Avg'] = player.find("span").text.strip()
+                        
+                ecoFrame = ecoFrame._append(ecoFrame2, ignore_index=True)
+                print(ecoFrame)
+                        
+                        
+        if j == 14: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                
+                soup = BeautifulSoup(page_source, features='lxml')
+
+                names = soup.find_all('span', class_="nickname")
+
+                for name in names:
+                        killFrame = killFrame._append({'Name': name.text.strip()}, ignore_index=True)
+                        
+                
+                nextDiv = soup.find_all('div', class_='table-cell multikills_vs_5 current-sorting')
+                for i, player in enumerate(nextDiv[1:]):
+                        killFrame.loc[i, 'ACE'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell multikills_vs_4')
+                for i, player in enumerate(nextDiv[1:]):
+                        killFrame.loc[i, '4Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell multikills_vs_3')
+                for i, player in enumerate(nextDiv[1:]):
+                        killFrame.loc[i, '3Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell multikills_vs_2')
+                for i, player in enumerate(nextDiv[1:]):
+                        killFrame.loc[i, '2Kill'] = player.find("span").text.strip()
+                        
+                        
+        if j == 15: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                
+                soup = BeautifulSoup(page_source, features='lxml')
+
+                names = soup.find_all('span', class_="nickname")
+
+                for name in names:
+                        killFrame2 = killFrame2._append({'Name': name.text.strip()}, ignore_index=True)
+                
+                nextDiv = soup.find_all('div', class_='table-cell multikills_vs_5 current-sorting')
+                for i, player in enumerate(nextDiv[1:]):
+                        killFrame2.loc[i, 'ACE'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell multikills_vs_4')
+                for i, player in enumerate(nextDiv[1:]):
+                        killFrame2.loc[i, '4Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell multikills_vs_3')
+                for i, player in enumerate(nextDiv[1:]):
+                        killFrame2.loc[i, '3Kill'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell multikills_vs_2')
+                for i, player in enumerate(nextDiv[1:]):
+                        killFrame2.loc[i, '2Kill'] = player.find("span").text.strip()
+                
+                killFrame = killFrame._append(killFrame2, ignore_index=True)
+                print(killFrame)
+                        
+                        
+        if j == 16: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                
+                soup = BeautifulSoup(page_source, features='lxml')
+
+                names = soup.find_all('span', class_="nickname")
+
+                for name in names:
+                        cluFrame = cluFrame._append({'Name': name.text.strip()}, ignore_index=True)
+                
+                nextDiv = soup.find_all('div', class_='table-cell clutches_vs_5 current-sorting')
+                for i, player in enumerate(nextDiv[1:]):
+                        cluFrame.loc[i, '5v1'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell clutches_vs_4')
+                for i, player in enumerate(nextDiv[1:]):
+                        cluFrame.loc[i, '4v1'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell clutches_vs_3')
+                for i, player in enumerate(nextDiv[1:]):
+                        cluFrame.loc[i, '3v1'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell clutches_vs_2')
+                for i, player in enumerate(nextDiv[1:]):
+                        cluFrame.loc[i, '2v1'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell clutches_vs_1')
+                for i, player in enumerate(nextDiv[1:]):
+                        cluFrame.loc[i, '1v1'] = player.find("span").text.strip()
+
+        if j == 17: 
+                wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
+                
+                soup = BeautifulSoup(page_source, features='lxml')
+
+                names = soup.find_all('span', class_="nickname")
+
+                for name in names:
+                        cluFrame2 = cluFrame2._append({'Name': name.text.strip()}, ignore_index=True)
+                
+                nextDiv = soup.find_all('div', class_='table-cell clutches_vs_5 current-sorting')
+                for i, player in enumerate(nextDiv[1:]):
+                        cluFrame2.loc[i, '5v1'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell clutches_vs_4')
+                for i, player in enumerate(nextDiv[1:]):
+                        cluFrame2.loc[i, '4v1'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell clutches_vs_3')
+                for i, player in enumerate(nextDiv[1:]):
+                        cluFrame2.loc[i, '3v1'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell clutches_vs_2')
+                for i, player in enumerate(nextDiv[1:]):
+                        cluFrame2.loc[i, '2v1'] = player.find("span").text.strip()
+
+                nextDiv = soup.find_all('div', class_='table-cell clutches_vs_1')
+                for i, player in enumerate(nextDiv[1:]):
+                        cluFrame2.loc[i, '1v1'] = player.find("span").text.strip()
+                        
+                cluFrame = cluFrame._append(cluFrame2, ignore_index=True)
+                print(cluFrame)
+                
+                
+dfs = [mainFrame, perFrame, killFrame, aimFrame, cluFrame, gerFrame, gunFrame, pisFrame]
+
+merged_df = pd.concat([df.set_index('Name') for df in dfs], axis=1, join='outer').reset_index()
+
+merged_df.to_csv('cs_atier_data.csv', index=False)
 
 driver.quit()
