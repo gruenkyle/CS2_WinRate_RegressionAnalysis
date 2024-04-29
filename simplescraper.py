@@ -36,7 +36,7 @@ links = pd.DataFrame({'URL': URLS})
 
 RANKS = ['s', 'a', 'b']
 
-MAINCLASS = ['table-cell kills', 'table-cell death', 'table-cell damage']
+MAINCLASS = ['table-cell rating current-sorting' 'table-cell kills', 'table-cell death', 'table-cell damage']
 
 PERCLASS = ['table-cell open_kills current-sorting', 'table-cell open_death', 
             'table-cell trades', 'table-cell assists']
@@ -64,8 +64,8 @@ CLUCLASS = ['table-cell clutches_vs_5 current-sorting', 'table-cell clutches_vs_
 
 ######
 
-mainFrame = pd.DataFrame(columns=['Name', 'Kill', 'Death', 'Damage'])
-mainFrame2 = pd.DataFrame(columns=['Name', 'Kill', 'Death', 'Damage'])
+mainFrame = pd.DataFrame(columns=['Name', 'Score', 'Kill', 'Death', 'Damage'])
+mainFrame2 = pd.DataFrame(columns=['Name', 'Score', 'Kill', 'Death', 'Damage'])
 
 perFrame = pd.DataFrame(columns=['Name', 'O_Kill', 'O_Death', 'Trade', 'Assist'])
 perFrame2 = pd.DataFrame(columns=['Name', 'O_Kill', 'O_Death', 'Trade', 'Assist'])
@@ -133,6 +133,10 @@ for j, URL in links['URL'].items():
                 
                 for name in names:
                         mainFrame = mainFrame._append({'Name': name.text.strip()}, ignore_index=True)
+                        
+                scoreDiv = soup.find_all('div', class_='table-cell rating current-sorting')
+                for i, player in enumerate(scoreDiv[1:]):        
+                        mainFrame.loc[i, 'Score'] = player.find("span").text.strip()
 
                 killDiv = soup.find_all('div', class_='table-cell kills')
                 for i, player in enumerate(killDiv[1:]):        
@@ -155,6 +159,10 @@ for j, URL in links['URL'].items():
                 
                 for name in names:
                         mainFrame2 = mainFrame2._append({'Name': name.text.strip()}, ignore_index=True)
+                        
+                scoreDiv = soup.find_all('div', class_='table-cell rating current-sorting')
+                for i, player in enumerate(scoreDiv[1:]):        
+                        mainFrame2.loc[i, 'Score'] = player.find("span").text.strip()
 
                 killDiv = soup.find_all('div', class_='table-cell kills')
                 for i, player in enumerate(killDiv[1:]):        
