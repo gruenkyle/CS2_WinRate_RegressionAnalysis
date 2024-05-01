@@ -13,7 +13,7 @@ import time
 
 from webdriver_manager.chrome import ChromeDriverManager
 
-url = "https://bo3.gg/players?period=last_12_months&tiers=a&tab=main&sort=rating&order=desc&page=2"
+url = "https://bo3.gg/players?period=last_12_months&tiers=s&tab=main&sort=rating&order=desc"
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--start-maximized")
@@ -39,25 +39,25 @@ button = WebDriverWait(driver, 10).until(
 button.click()
 
 
-sleepTime = 5.0
-
 driver.execute_script("window.scrollTo(0, 100)")
 
-time.sleep(sleepTime)
 
 soup = BeautifulSoup(page_source, features='html.parser')
 
 names = soup.find_all('span', class_="nickname")
 
-mainFrame = pd.DataFrame(columns=['Name', 'Kill', 'Death', 'Damage'])
+mainFrame = pd.DataFrame(columns=['Name', 'Score', 'Kill', 'Death', 'Damage', 'PlayCount'])
 
 for name in names:
     mainFrame = mainFrame._append({'Name': name.text.strip()}, ignore_index=True)
+    
+scoreDiv = soup.find_all('div', class_='table-cell rating current-sorting')
+for i, player in enumerate(scoreDiv[1:]):        
+        mainFrame.loc[i, 'Score'] = player.find("span").text.strip()
 
 killDiv = soup.find_all('div', class_='table-cell kills')
 for i, player in enumerate(killDiv[1:]):
     mainFrame.loc[i, 'Kill'] = player.find("span").text.strip()
-
 
 deathDiv = soup.find_all('div', class_='table-cell death')
 for i, player in enumerate(deathDiv[1:]):
@@ -66,11 +66,15 @@ for i, player in enumerate(deathDiv[1:]):
 nextDiv = soup.find_all('div', class_='table-cell damage')
 for i, player in enumerate(nextDiv[1:]):
     mainFrame.loc[i, 'Damage'] = player.find("span").text.strip()
+    
+nextDiv = soup.find_all('div', class_='table-cell games_count')
+for i, player in enumerate(nextDiv[1:]):
+    mainFrame.loc[i, 'PlayCount'] = player.find("p").text.strip()
 
 
 ### PERFORMANCE PAGE ###
 
-url2 = 'https://bo3.gg/players?period=last_12_months&tiers=a&tab=performance&sort=open_kills&order=desc&page=2'
+url2 = 'https://bo3.gg/players?period=last_12_months&tiers=s&tab=performance&sort=open_kills&order=desc'
 
 driver.get(url2)
 wait = WebDriverWait(driver, 10)
@@ -85,8 +89,6 @@ if get_url == url2:
     page_source = driver.page_source
 
 driver.execute_script("window.scrollTo(0, 100)")
-
-time.sleep(sleepTime + 2.0)
 
 soup = BeautifulSoup(page_source, features='html.parser')
 
@@ -115,7 +117,7 @@ for i, player in enumerate(assistDiv[1:]):
 
 ### AIM REVIEW ###
 
-url3 = 'https://bo3.gg/players?period=last_12_months&tiers=a&tab=aim&sort=headshots&order=desc'
+url3 = 'https://bo3.gg/players?period=last_12_months&tiers=s&tab=aim&sort=headshots&order=desc'
 
 driver.get(url3)
 wait = WebDriverWait(driver, 10)
@@ -130,8 +132,6 @@ if get_url == url3:
     page_source = driver.page_source
 
 driver.execute_script("window.scrollTo(0, 1800)")
-
-time.sleep(sleepTime + 4.0)
 
 soup = BeautifulSoup(page_source, features='html.parser')
 
@@ -160,7 +160,7 @@ for i, player in enumerate(accDiv[1:]):
 
 ### Gernade REVIEW ###
 
-url4 = 'https://bo3.gg/players?period=last_12_months&tiers=a&tab=grenades&sort=flash_assist&order=desc'
+url4 = 'https://bo3.gg/players?period=last_12_months&tiers=s&tab=grenades&sort=flash_assist&order=desc'
 
 driver.get(url4)
 wait = WebDriverWait(driver, 10)
@@ -175,8 +175,6 @@ if get_url == url4:
     page_source = driver.page_source
 
 driver.execute_script("window.scrollTo(0, 1800)")
-
-time.sleep(sleepTime + 6.0)
 
 soup = BeautifulSoup(page_source, features='html.parser')
 
@@ -209,7 +207,7 @@ for i, player in enumerate(nextDiv[1:]):
 
 ### Primary REVIEW ###
 
-url5 = 'https://bo3.gg/players?period=last_12_months&tiers=a&tab=primary_devices&sort=ak47_kills&order=desc'
+url5 = 'https://bo3.gg/players?period=last_12_months&tiers=s&tab=primary_devices&sort=ak47_kills&order=desc'
 
 driver.get(url5)
 wait = WebDriverWait(driver, 10)
@@ -224,8 +222,6 @@ if get_url == url5:
     page_source = driver.page_source
 
 driver.execute_script("window.scrollTo(0, 1800)")
-
-time.sleep(sleepTime + 8.0)
 
 soup = BeautifulSoup(page_source, features='html.parser')
 
@@ -263,7 +259,7 @@ for i, player in enumerate(nextDiv[1:]):
 
 ### Pistol REVIEW ###
 
-url6 = 'https://bo3.gg/players?period=last_12_months&tiers=a&tab=pistols&sort=deagle_kills&order=desc'
+url6 = 'https://bo3.gg/players?period=last_12_months&tiers=s&tab=pistols&sort=deagle_kills&order=desc'
 
 driver.get(url6)
 wait = WebDriverWait(driver, 10)
@@ -278,8 +274,6 @@ if get_url == url6:
     page_source = driver.page_source
 
 driver.execute_script("window.scrollTo(0, 1800)")
-
-time.sleep(sleepTime + 10.0)
 
 soup = BeautifulSoup(page_source, features='html.parser')
 
@@ -316,7 +310,7 @@ for i, player in enumerate(nextDiv[1:]):
 
 ### Economy Costs REVIEW ###
 
-url7 = 'https://bo3.gg/players?period=last_12_months&tiers=a&tab=economy&sort=kill_cost&order=desc'
+url7 = 'https://bo3.gg/players?period=last_12_months&tiers=s&tab=economy&sort=kill_cost&order=desc'
 
 driver.get(url7)
 wait = WebDriverWait(driver, 10)
@@ -331,8 +325,6 @@ if get_url == url7:
     page_source = driver.page_source
 
 driver.execute_script("window.scrollTo(0, 1800)")
-
-time.sleep(sleepTime + 12.0)
 
 soup = BeautifulSoup(page_source, features='html.parser')
 
@@ -357,7 +349,7 @@ for i, player in enumerate(nextDiv[1:]):
 
 ### Kill REVIEW ###
 
-url8 = 'https://bo3.gg/players?period=last_12_months&tiers=a&tab=multikills&sort=multikills_vs_5&order=desc'
+url8 = 'https://bo3.gg/players?period=last_12_months&tiers=s&tab=multikills&sort=multikills_vs_5&order=desc'
 
 driver.get(url8)
 wait = WebDriverWait(driver, 10)
@@ -372,8 +364,6 @@ if get_url == url8:
     page_source = driver.page_source
 
 driver.execute_script("window.scrollTo(0, 1800)")
-
-time.sleep(sleepTime + 14.0)
 
 soup = BeautifulSoup(page_source, features='html.parser')
 
@@ -402,7 +392,7 @@ for i, player in enumerate(nextDiv[1:]):
 
 ### Economy Costs REVIEW ###
 
-url8 = 'https://bo3.gg/players?period=last_12_months&tiers=a&tab=clutches&sort=clutches_vs_5&order=desc'
+url8 = 'https://bo3.gg/players?period=last_12_months&tiers=s&tab=clutches&sort=clutches_vs_5&order=desc'
 
 driver.get(url8)
 wait = WebDriverWait(driver, 10)
@@ -417,8 +407,6 @@ if get_url == url8:
     page_source = driver.page_source
 
 driver.execute_script("window.scrollTo(0, 1800)")
-
-time.sleep(sleepTime + 20.0)
 
 soup = BeautifulSoup(page_source, features='html.parser')
 
@@ -455,7 +443,7 @@ dfs = [mainFrame, perFrame, killFrame, aimFrame, cluFrame, gerFrame, gunFrame, p
 
 merged_df = pd.concat([df.set_index('Name') for df in dfs], axis=1, join='outer').reset_index()
 
-merged_df.to_csv('cs_atier_data.csv', index=False)
+merged_df.to_csv('cs_stier_data.csv', index=False)
 
 driver.quit()
 

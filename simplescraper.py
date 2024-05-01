@@ -64,8 +64,8 @@ CLUCLASS = ['table-cell clutches_vs_5 current-sorting', 'table-cell clutches_vs_
 
 ######
 
-mainFrame = pd.DataFrame(columns=['Name', 'Score', 'Kill', 'Death', 'Damage'])
-mainFrame2 = pd.DataFrame(columns=['Name', 'Score', 'Kill', 'Death', 'Damage'])
+mainFrame = pd.DataFrame(columns=['Name', 'Score', 'Kill', 'Death', 'Damage', 'PlayCount'])
+mainFrame2 = pd.DataFrame(columns=['Name', 'Score', 'Kill', 'Death', 'Damage', 'PlayCount'])
 
 perFrame = pd.DataFrame(columns=['Name', 'O_Kill', 'O_Death', 'Trade', 'Assist'])
 perFrame2 = pd.DataFrame(columns=['Name', 'O_Kill', 'O_Death', 'Trade', 'Assist'])
@@ -149,6 +149,10 @@ for j, URL in links['URL'].items():
                 nextDiv = soup.find_all('div', class_='table-cell damage')
                 for i, player in enumerate(nextDiv[1:]):        
                         mainFrame.loc[i, 'Damage'] = player.find("span").text.strip()
+                        
+                nextDiv = soup.find_all('div', class_='table-cell games_count')
+                for i, player in enumerate(nextDiv[1:]):        
+                        mainFrame.loc[i, 'PlayCount'] = player.find("p").text.strip()
         
         if j == 1: 
                 wait.until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'table-cell')))
@@ -175,6 +179,10 @@ for j, URL in links['URL'].items():
                 nextDiv = soup.find_all('div', class_='table-cell damage')
                 for i, player in enumerate(nextDiv[1:]):        
                         mainFrame2.loc[i, 'Damage'] = player.find("span").text.strip()
+                        
+                nextDiv = soup.find_all('div', class_='table-cell games_count')
+                for i, player in enumerate(nextDiv[1:]):        
+                        mainFrame2.loc[i, 'PlayCount'] = player.find("p").text.strip()
 
                 mainFrame = mainFrame._append(mainFrame2, ignore_index=True)
                 print(mainFrame)
